@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.frame = 0
         self.images = []
         for i in range(1, 5):
-            img = pygame.image.load(os.path.join('images', 'hero' + str(i) + '.png')).convert()
+            img = pygame.image.load('Images/Untitled-1.png')
             img.convert_alpha()  # optimise alpha
             img.set_colorkey(ALPHA)  # set alpha
             self.images.append(img)
@@ -50,10 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.movex += x
         self.movey += y
 
-    def update(self): """
-        Update sprite position
-        """
-
+    def update(self):
         self.rect.x = self.rect.x + self.movex
         self.rect.y = self.rect.y + self.movey
 
@@ -76,7 +73,7 @@ class Player(pygame.sprite.Sprite):
 Setup
 '''
 
-backdrop = pygame.image.load(os.path.join('images', 'stage.png'))
+backdrop = pygame.image.load('Images/Track.png')
 clock = pygame.time.Clock()
 pygame.init()
 backdropbox = world.get_rect()

@@ -4,14 +4,14 @@ import map
 import sprites
 
 # loads the image that will be used for the background
-background = pygame.image.load('Images/Track.png')
+background = pygame.image.load('Images/track.png')
 # loads the image that will be used for collisions
-border = pygame.image.load('Images/borderr.png')
+border = pygame.image.load('Images/border.png')
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 background_rect = background.get_rect()
-screenHeight = 800
-screenWidth = 800
+screenHeight = 850
+screenWidth = 850
 # frames per second
 FPS = 60
 
