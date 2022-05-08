@@ -90,6 +90,11 @@ class BaseCarPlayer:
         # the car is thrown backwards at the current speed
         self.speed = -self.speed
 
+    # defines what to do in the case that the car goes off-road
+    def offroad(self):
+        # the car is reduced to a portion of the original speed
+        self.speed = self.speed*0.95
+
 # uses the base car template to create the player car
 class PlayerCar(BaseCarPlayer):
     # sets the player's car image

@@ -7,6 +7,10 @@ import sprites
 background = pygame.image.load('Images/track.png')
 # loads the image that will be used for collisions
 border = pygame.image.load('Images/border.png')
+# loads the image that will be used for off road slowing down
+dirt = pygame.image.load('Images/dirt.png')
+dirtMask = pygame.mask.from_surface(dirt)
+
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 background_rect = background.get_rect()
@@ -62,6 +66,9 @@ def main():
         # if it detects a point of intersection(POI), a collision occurs
         if player.collisions(borderMask) is not None:
             player.collide()
+        # if the car starts driving on the dirt, the car will slow down
+        elif player.collisions(dirtMask) is not None:
+            player.offroad()
 
         # draws the background
         screen.blit(background, background_rect)
