@@ -76,11 +76,11 @@ class BaseCarPlayer:
         rotCenter(screen, self.image, (self.x, self.y), self.angle)
 
     # checks for any collision
-    def collisions(self, mask):
+    def collisions(self, mask, x, y):
         # creates a car mask (ignores transparent pixels)
         carMask = pygame.mask.from_surface(self.image)
         # checks the offset position of the car relative to the border
-        offset = (int(self.x - 0), int(self.y - 0))
+        offset = (int(self.x - x), int(self.y - y))
         # looks for a point of intersection between the car and the border
         poi = mask.overlap(carMask, offset)
         return poi
@@ -93,7 +93,7 @@ class BaseCarPlayer:
     # defines what to do in the case that the car goes off-road
     def offroad(self):
         # the car is reduced to a portion of the original speed
-        self.speed = self.speed*0.95
+        self.speed = self.speed*0.97
 
 # uses the base car template to create the player car
 class PlayerCar(BaseCarPlayer):

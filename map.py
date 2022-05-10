@@ -1,6 +1,6 @@
 import pygame
-
-
+# not viable as fpr when the player attempts to move they will also be moving the map, therefor movement is  == to x2
+# therefore not a viable option.                                                                                                                                
 # move the map with the player
 class MapMovement:
     def __init__(self):
