@@ -2,7 +2,7 @@ import pygame
 import math
 
 # loads the images that will be used for SPRITES
-MARCO_CAR = pygame.image.load('Images/Untitled-1.png')
+MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
 
 # template that features the basic characteristic of ALL car movement and actions found in this game
 class BaseCarPlayer:
@@ -12,8 +12,6 @@ class BaseCarPlayer:
         self.image = self.IMG
         # set the rectangle/box that will enclose the image: just the image box here
         self.rect = self.image.get_rect()
-        # set where the player will start on the screen
-        self.rect.center = (97, 450)
         # set the starting speed, angle, and acceleration
         self.speed = 0
         self.angle = 0
@@ -23,6 +21,20 @@ class BaseCarPlayer:
         # max velocity
         self.maxSpeed = maxSpeed
         self.rotVelocity = rotVelocity
+
+    def playerPicture(self, number):
+        animation = [pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_1.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_2.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_3.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_4.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_5.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_6.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_7.png')]
+        self.image = animation[number]
+
+    def changeMaxPU(self):
+        self.maxSpeed = self.maxSpeed + 0.1
 
     # coin advantage, more coins will grant a higher maximum speed
     def changeMax(self, coin_score):
@@ -104,7 +116,7 @@ class PlayerCar(BaseCarPlayer):
     # sets the player's car image
     IMG = MARCO_CAR
     # sets the starting position of the player's car!
-    xy = (40, 485)
+    xy = (37, 515)
 
 # rotates an image around its center
 def rotCenter(screen, image, top_left, angle):
