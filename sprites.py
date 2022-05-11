@@ -24,6 +24,10 @@ class BaseCarPlayer:
         self.maxSpeed = maxSpeed
         self.rotVelocity = rotVelocity
 
+    # coin advantage, more coins will grant a higher maximum speed
+    def changeMax(self, coin_score):
+        self.maxSpeed = self.maxSpeed + coin_score*0.015
+
     # tells the car how to accelerate everytime that the up button is pushed/held
     def accelerate_for(self):
         # add acceleration to the previously recorded speed value
