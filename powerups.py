@@ -21,8 +21,8 @@ class Animation:
 
 
 def random():
-    choices = ['mushroom', 'coin']
-    x = r.randint(0, 1)
+    choices = ['mushroom', 'coin', 'banana']
+    x = r.randint(0, 2)
     powerup = choices[x]
     return powerup
 
