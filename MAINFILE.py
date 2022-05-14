@@ -3,22 +3,24 @@ import pygame
 import sprites
 import powerups
 import Buttons
+from utils import scale_image
+
 
 # initializes pygame
 pygame.init()
 # loads the image that will be used for the background
-background = pygame.image.load('Images/track.png')
+background = scale_image(pygame.image.load('Images/track.png'), 0.9)
 # loads the sound that will be used for the picking up coins
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
 # loads the sound that will be used for slipping on oil
 oil_sound = pygame.mixer.Sound('Sounds/Oil.wav')
 black = pygame.image.load('Images/black.webp')
 # loads the image that will be used for collisions
-border = pygame.image.load('Images/border.png')
+border = scale_image(pygame.image.load('Images/border.png'), 0.9)
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 # loads the image that will be used for off-road slowing down
-dirt = pygame.image.load('Images/dirt.png')
+dirt = scale_image(pygame.image.load('Images/dirt.png'), 0.9)
 # makes a mask for the dirt on the track (ignores transparent pixels)
 dirtMask = pygame.mask.from_surface(dirt)
 mushroomPic = pygame.image.load('Images/Mushroom.png')
@@ -28,20 +30,22 @@ none = pygame.image.load('Images/None.png')
 
 
 background_rect = background.get_rect()
-screenHeight = 850
-screenWidth = 850
+WIDTH, HEIGHT = background.get_width(), background.get_height()
+#screenHeight = 850
+#screenWidth = 850
 # frames per second
 FPS = 60
 
 # initializes pygame screen with its set caption
 pygame.init()
-screen = pygame.display.set_mode([screenWidth, screenHeight])
+screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption("Marco's Wheels")
 font = pygame.font.Font(pygame.font.get_default_font(), 20)
 clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
+computer =sprites.ComputerCar (2,2)
 button = Buttons.Button
 # coin placement and image
 coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
@@ -245,6 +249,7 @@ def game():
             screen.blit(random_image, (r[0], r[1]))
         # draws the players car
         player.draw(screen)
+        computer.draw(screen)
 
         # HUD
         coin_display = font.render('Coins: ' + str(coin_score), True, (0, 0, 0))
