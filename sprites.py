@@ -1,9 +1,10 @@
 import pygame
 import math
+from utils import scale_image
 
 # loads the images that will be used for SPRITES
 MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
-GREEN_CAR = pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png')
+GREEN_CAR = scale_image(pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png'), 0.4)
 # template that features the basic characteristic of ALL car movement and actions found in this game
 class BaseCarPlayer:
     # initializes sprite

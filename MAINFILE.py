@@ -45,7 +45,7 @@ clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer =sprites.ComputerCar (2,2)
+computer = sprites.ComputerCar (2,2)
 button = Buttons.Button
 # coin placement and image
 coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
