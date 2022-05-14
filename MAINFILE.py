@@ -41,11 +41,10 @@ screenHeight = background.get_height()
 
 # frames per second
 FPS = 60
-PATH = [(65, 412), (68, 281), (72, 132), (125, 59), (211, 74), (294, 176),
-        (418, 232), (483, 144), (543, 66), (676, 72), (712, 220), (639, 316),
-        (492, 354), (301, 433), (372, 485), (507, 477), (697, 510), (704, 612),
-        (602, 690), (474, 657), (392, 588), (325, 632), (229, 713), (107, 683),
-        (73, 568), (71, 435)]
+PATH = [(45, 200), (90, 80),  (200, 50), (438, 226),
+         (537, 58), (695, 106), (689, 304), (289, 402),
+         (305, 481), (642, 470), (684, 651), (512, 691),
+         (383, 604), (242, 702), (89, 682), (60, 321)]
 
 # initializes pygame screen with its set caption
 pygame.init()
@@ -56,7 +55,7 @@ clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar(2, 6, PATH)
+computer = sprites.ComputerCar (2,6,PATH)
 
 button = Buttons.Button
 # coin placement and image
@@ -160,8 +159,14 @@ def game():
                 main_menu()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
+
+            # this code allows us to set the points for the computer car
+            #if event.type == pygame.MOUSEBUTTONDOWN:
+                #pos = pygame.mouse.get_pos()
+                #computer.path.append(pos)
         # moves the computer car to follow the points set in PATH
-        computer.move()
+        computer.accelerate_for()
+
         # each time the loop runs, and there is no movement after previous movement, de acceleration is activated
         moving = False
         keys = pygame.key.get_pressed()
