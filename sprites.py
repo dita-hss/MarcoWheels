@@ -4,7 +4,7 @@ from utility_fxn import scaling_factor
 
 # loads the images that will be used for SPRITES
 MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
-GREEN_CAR = scaling_factor(pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png'), 0.4)
+GREEN_CAR = scaling_factor(pygame.image.load('Images/green-car.png'), 0.4)
 
 
 # template that features the basic characteristic of ALL car movement and actions found in this game
@@ -199,4 +199,11 @@ class ComputerCar(BaseCarPlayer):
 
         self.calculate_angle()
         self.update_path_point()
-        #super().move()
+        super().direction()
+
+    def reset(self):
+        self.x = 70
+        self.y = 515
+        self.angle = 0
+        self.current_point = 0
+

@@ -3,6 +3,7 @@ import pygame
 import sprites
 import powerups
 import Buttons
+import time
 from utility_fxn import scaling_factor
 
 
@@ -10,6 +11,10 @@ from utility_fxn import scaling_factor
 pygame.init()
 # loads the image that will be used for the background
 background = scaling_factor(pygame.image.load('Images/track.png'), 0.9)
+# loads the image that will be used for the background
+finishLine = scaling_factor(pygame.image.load('Images/finishline.png'), 0.9)
+# makes a mask for the border (ignores transparent pixels)
+finishLineMask = pygame.mask.from_surface(finishLine)
 # loads the sound that will be used for the picking up coins
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
 # loads the sound that will be used for slipping on oil
@@ -30,9 +35,10 @@ none = pygame.image.load('Images/None.png')
 
 
 background_rect = background.get_rect()
-WIDTH, HEIGHT = background.get_width(), background.get_height()
-#screenHeight = 850
-#screenWidth = 850
+finishLine_rect = finishLine.get_rect()
+screenWidth = background.get_width()
+screenHeight = background.get_height()
+
 # frames per second
 FPS = 60
 PATH = [(65, 412), (68, 281), (72, 132), (125, 59), (211, 74), (294, 176),
@@ -43,14 +49,14 @@ PATH = [(65, 412), (68, 281), (72, 132), (125, 59), (211, 74), (294, 176),
 
 # initializes pygame screen with its set caption
 pygame.init()
-screen = pygame.display.set_mode([WIDTH, HEIGHT])
+screen = pygame.display.set_mode([screenWidth, screenHeight])
 pygame.display.set_caption("Marco's Wheels")
 font = pygame.font.Font(pygame.font.get_default_font(), 20)
 clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar (2,2, PATH)
+computer = sprites.ComputerCar(2, 6, PATH)
 
 button = Buttons.Button
 # coin placement and image
@@ -88,18 +94,18 @@ random = [pygame.Rect(40, 139, 41, 50), pygame.Rect(80, 139, 41, 50), pygame.Rec
 
 def main_menu():
     menuBackground = pygame.image.load('Images/menubackground.png')
-    screen.blit(menuBackground, (0, 0))
+    screen.blit(menuBackground, (-310, 0))
     running1 = True
     pygame.mixer.music.load('Sounds/Menu.mp3')
     pygame.mixer.music.play(-1)
 
     while running1:
         startButton = button("START", pygame.image.load("Images/button.png"),
-                             405, 395, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+                             390, 395, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
         rulesButton = button("RULES", pygame.image.load("Images/button.png"),
-                             405, 435, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+                             390, 435, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
         quitButton = button("QUIT", pygame.image.load("Images/button.png"),
-                            405, 475, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+                            390, 475, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
 
         buttons = [startButton, rulesButton, quitButton]
         mouse = pygame.mouse.get_pos()
@@ -123,19 +129,27 @@ def main_menu():
                     running1 = False
                 if quitButton.mouseInput(mouse):
                     running1 = False
+
+        header = pygame.font.SysFont(None, 100)
+        text = "MARCO'S WHEELS"
+        rule_display = header.render(text, True, (0, 0, 0))
+        screen.blit(rule_display, (65, 150))
         pygame.display.update()
 
 
 def game():
     # game loop
     box = []
+    race_count = 0
     last_powerup = none
     sprites.BaseCarPlayer.reset(player, 2, 2)
     running = True
     coin_score = 0
-    # loads background music
-    pygame.mixer.music.load('Sounds/Background.mp3')
+    # loads background music nonstop
+    pygame.mixer.music.load('Sounds/background2.mp3')
+    pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
+
     while running:
         # keeps the loop running at the same speed in any device used
         clock.tick(FPS)
@@ -178,6 +192,8 @@ def game():
                 pass
             elif box[0] == 'mushroom':
                 player.changeMaxPU()
+                mushroom_sound = pygame.mixer.Sound('Sounds/mushroom.mp3')
+                mushroom_sound.play()
                 last_powerup = none
                 box = []
             elif box[0] == 'coin':
@@ -187,6 +203,8 @@ def game():
                 box = []
             elif box[0] == 'banana':
                 screen.blit(bananaPic, (player.position()))
+                banana_sound = pygame.mixer.Sound('Sounds/banana.wav')
+                banana_sound.play()
                 last_powerup = none
                 box = []
 
@@ -209,8 +227,15 @@ def game():
             if coin_score < 0:
                 coin_score = 0
         # if the car starts driving on the dirt, the car will slow down
-        elif player.collisions(dirtMask, 0, 0) is not None:
+        if player.collisions(dirtMask, 0, 0) is not None:
             player.offroad()
+
+        if player.collisions(finishLineMask, 0, 0) is not None:
+            race_count += 1
+            if race_count == 20:
+                end_gamePlayerWin()
+                break
+
         for r in random:
             if player.collisions(randomMask, r[0], r[1]) is not None:
                 if powerups.random() == 'coin':
@@ -320,6 +345,8 @@ def rules():
 
 def countdownStart():
     running3 = True
+    pygame.mixer.music.stop()
+    computer.reset()
     while running3:
         screen.blit(black, (450, 450))
         for event in pygame.event.get():
@@ -328,11 +355,67 @@ def countdownStart():
                 running3 = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running3 = False
+        screen.fill((0, 0, 0))
+        text = 'ARE YOU READY?'
+        ready_display = font.render(text, True, (255, 255, 255))
+        screen.blit(ready_display, (290, 370))
+        pygame.display.update()
         start_sound = pygame.mixer.Sound('Sounds/racestart.wav')
         start_sound.play()
+        time.sleep(3.5)
         break
     game()
 
+
+def end_gamePlayerWin():
+    running4 = True
+    pygame.mixer.music.stop()
+    win_sound = pygame.mixer.Sound('Sounds/win.wav')
+    win_sound.play()
+    while running4:
+        for event in pygame.event.get():
+            # ends the code when the pygame window is closed or if the escape key is pressed
+            if event.type == pygame.QUIT:
+                running4 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running4 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                countdownStart()
+
+
+        screen.fill((0, 0, 0))
+        text = 'WOW YOU BEAT MARCO'
+        ready_display = font.render(text, True, (255, 255, 255))
+        screen.blit(ready_display, (260, 370))
+        text1 = 'press space to restart or esc to quit'
+        ready_display1 = font.render(text1, True, (255, 255, 255))
+        screen.blit(ready_display1, (220, 570))
+        pygame.display.update()
+
+
+def end_gamePlayerLose():
+    running4 = True
+    pygame.mixer.music.stop()
+    lose_sound = pygame.mixer.Sound('Sounds/lose.wav')
+    lose_sound.play()
+    while running4:
+        for event in pygame.event.get():
+            # ends the code when the pygame window is closed or if the escape key is pressed
+            if event.type == pygame.QUIT:
+                running4 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running4 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                countdownStart()
+
+        screen.fill((0, 0, 0))
+        text = 'YOU LOSE'
+        ready_display = font.render(text, True, (255, 255, 255))
+        screen.blit(ready_display, (260, 370))
+        text1 = 'press space to restart or esc to quit'
+        ready_display1 = font.render(text1, True, (255, 255, 255))
+        screen.blit(ready_display1, (220, 570))
+        pygame.display.update()
+
+
 main_menu()
-print(computer.path)
-pygame.quit()
