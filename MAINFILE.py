@@ -2,47 +2,47 @@
 import pygame
 import sprites
 import powerups
-from utils import scale_image
+import Buttons
 
+# initializes pygame
 pygame.init()
 # loads the image that will be used for the background
-background = scale_image(pygame.image.load('Images/track.png'), 0.9)
-# loads background music
-pygame.mixer.music.load('Sounds/Background.mp3')
-pygame.mixer.music.play(-1)
+background = pygame.image.load('Images/track.png')
+# loads the sound that will be used for the picking up coins
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
+# loads the sound that will be used for slipping on oil
 oil_sound = pygame.mixer.Sound('Sounds/Oil.wav')
+black = pygame.image.load('Images/black.webp')
 # loads the image that will be used for collisions
-border = scale_image(pygame.image.load('Images/border.png'), 0.9)
+border = pygame.image.load('Images/border.png')
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 # loads the image that will be used for off-road slowing down
-dirt = scale_image(pygame.image.load('Images/dirt.png'),0.9)
+dirt = pygame.image.load('Images/dirt.png')
 # makes a mask for the dirt on the track (ignores transparent pixels)
 dirtMask = pygame.mask.from_surface(dirt)
 mushroomPic = pygame.image.load('Images/Mushroom.png')
+bananaPic = pygame.image.load('Images/banana.png')
 coinPic = pygame.image.load('Images/CoinAnimation/Coin1.png')
 none = pygame.image.load('Images/None.png')
 
 
 background_rect = background.get_rect()
-WIDTH, HEIGHT = background.get_width(), background.get_height()
-#screenHeight = 850
-#screenWidth = 850
+screenHeight = 850
+screenWidth = 850
 # frames per second
 FPS = 60
 
 # initializes pygame screen with its set caption
 pygame.init()
-SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
+screen = pygame.display.set_mode([screenWidth, screenHeight])
 pygame.display.set_caption("Marco's Wheels")
 font = pygame.font.Font(pygame.font.get_default_font(), 20)
 clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar(2, 2)
-
+button = Buttons.Button
 # coin placement and image
 coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
             pygame.image.load('Images/CoinAnimation/Coin2.png'),
@@ -75,11 +75,57 @@ random = [pygame.Rect(40, 139, 41, 50), pygame.Rect(80, 139, 41, 50), pygame.Rec
           pygame.Rect(631, 753, 41, 50), pygame.Rect(631, 784, 41, 50), pygame.Rect(37, 554, 41, 50),
           pygame.Rect(79, 554, 41, 50)]
 
-def main():
+
+def main_menu():
+    menuBackground = pygame.image.load('Images/menubackground.png')
+    screen.blit(menuBackground, (0, 0))
+    running1 = True
+    pygame.mixer.music.load('Sounds/Menu.mp3')
+    pygame.mixer.music.play(-1)
+
+    while running1:
+        startButton = button("START", pygame.image.load("Images/button.png"),
+                             405, 395, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+        rulesButton = button("RULES", pygame.image.load("Images/button.png"),
+                             405, 435, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+        quitButton = button("QUIT", pygame.image.load("Images/button.png"),
+                            405, 475, pygame.font.Font(pygame.font.get_default_font(), 20), (255, 255, 255))
+
+        buttons = [startButton, rulesButton, quitButton]
+        mouse = pygame.mouse.get_pos()
+        for b in buttons:
+            if b.image is not None:
+                screen.blit(b.image, b.rect)
+            screen.blit(b.text, b.text_rect)
+
+        for event in pygame.event.get():
+            # ends the code when the pygame window is closed or if the escape key is pressed
+            if event.type == pygame.QUIT:
+                running1 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running1 = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if startButton.mouseInput(mouse):
+                    countdownStart()
+                    running1 = False
+                if rulesButton.mouseInput(mouse):
+                    rules()
+                    running1 = False
+                if quitButton.mouseInput(mouse):
+                    running1 = False
+        pygame.display.update()
+
+
+def game():
     # game loop
+    box = []
     last_powerup = none
+    sprites.BaseCarPlayer.reset(player, 2, 2)
     running = True
     coin_score = 0
+    # loads background music
+    pygame.mixer.music.load('Sounds/Background.mp3')
+    pygame.mixer.music.play(-1)
     while running:
         # keeps the loop running at the same speed in any device used
         clock.tick(FPS)
@@ -87,25 +133,22 @@ def main():
         for event in pygame.event.get():
             # ends the code when the pygame window is closed or if the escape key is pressed
             if event.type == pygame.QUIT:
-                running = False
+                main_menu()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
         # each time the loop runs, and there is no movement after previous movement, de acceleration is activated
         moving = False
         keys = pygame.key.get_pressed()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            print(pos)
         # when player presses down on the left arrow key, the car rotates towards the left
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player.steering(left=True)
             player.playerPicture(4)
         # when player presses down on the right arrow key, the car rotates towards the left
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT or keys[pygame.K_d]]:
             player.steering(right=True)
             player.playerPicture(6)
         # when player presses down on the up key, the car begins accelerating forward
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP or keys[pygame.K_w]]:
             moving = True
             player.accelerate_for()
             if keys[pygame.K_UP] and keys[pygame.K_LEFT]:
@@ -118,6 +161,22 @@ def main():
         if keys[pygame.K_DOWN]:
             moving = True
             player.accelerate_back()
+        if keys[pygame.K_SPACE]:
+            if len(box) == 0:
+                pass
+            elif box[0] == 'mushroom':
+                player.changeMaxPU()
+                last_powerup = none
+                box = []
+            elif box[0] == 'coin':
+                coin_score += 1
+                coin_sound.play()
+                last_powerup = none
+                box = []
+            elif box[0] == 'banana':
+                screen.blit(bananaPic, (player.position()))
+                last_powerup = none
+                box = []
 
         # otherwise, the car begins de-accelerating
         if not moving:
@@ -143,15 +202,17 @@ def main():
         for r in random:
             if player.collisions(randomMask, r[0], r[1]) is not None:
                 if powerups.random() == 'coin':
-                    coin_score += 1
-                    coin_sound.play()
+                    box = []
                     last_powerup = coinPic
-                else:
-                    player.changeMaxPU()
+                    box.append('coin')
+                elif powerups.random() == 'mushroom':
+                    box = []
                     last_powerup = mushroomPic
-
-
-
+                    box.append('mushroom')
+                elif powerups.random() == 'banana':
+                    box = []
+                    last_powerup = bananaPic
+                    box.append('banana')
                 random.remove(r)
         # when a player touches a coin, that coin is removed from the list and erased from the screem
         for coin in coins:
@@ -170,40 +231,90 @@ def main():
             if player.collisions(oilMask, oi[0], oi[1]) is not None:
                 oil_sound.play()
                 coin_score = 0
+                player.offroad()
 
-        SCREEN.blit(background, background_rect)
+        screen.blit(background, background_rect)
         # draws the coins in place
         for coin in coins:
-            coinAnimation.draw(SCREEN, coin[0], coin[1])
+            coinAnimation.draw(screen, coin[0], coin[1])
         # draws the oil puddles in place
         for o in oil:
-            SCREEN.blit(oil_image, (o[0], o[1]))
+            screen.blit(oil_image, (o[0], o[1]))
         # draws the mystery boxes in place
         for r in random:
-            SCREEN.blit(random_image, (r[0], r[1]))
+            screen.blit(random_image, (r[0], r[1]))
         # draws the players car
-        player.draw(SCREEN)
-        # draws the computer's car
-        computer.draw(SCREEN)
+        player.draw(screen)
 
         # HUD
         coin_display = font.render('Coins: ' + str(coin_score), True, (0, 0, 0))
         coin_rect = coin_display.get_rect()
         coin_rect.x = 10
         coin_rect.y = 10
-        SCREEN.blit(coin_display, coin_rect)
-        powerup_display = font.render('Last Powerup: ', last_powerup, True)
-        powerup_rect = powerup_display.get_rect()
-        powerup_rect.x = 160
-        powerup_rect.y = 330
-        SCREEN.blit(powerup_display, powerup_rect)
-        SCREEN.blit(last_powerup, (310, 333))
+        screen.blit(coin_display, coin_rect)
+        pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(20, 40, 40, 40))
+        screen.blit(last_powerup, (33, 53))
 
 
         # updates the players screen to keep it from getting messy
         pygame.display.update()
 
 
+def rules():
+    screen.blit(black, (0, 0))
+    running2 = True
+    while running2:
+        for event in pygame.event.get():
+            # ends the code when the pygame window is closed or if the escape key is pressed
+            if event.type == pygame.QUIT:
+                main_menu()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running2 = False
 
-# runs the main code
-main()
+        text = 'Player movement: You can use the arrow keys or WASD.'
+        rule_display = font.render(text, True, (255, 100, 0))
+        screen.blit(rule_display, (33, 53))
+
+        text2 = 'Powerups: Mushrooms increase your maximum speed.'
+        rule_display2 = font.render(text2, True, (255, 150, 0))
+        screen.blit(rule_display2, (33, 93))
+
+        text2_1 = 'Coins speed you up.'
+        rule_display2_1 = font.render(text2_1, True, (255, 150, 0))
+        screen.blit(rule_display2_1, (143, 113))
+
+        text2_2 = 'Bananas make your opponent or yourself slip.'
+        rule_display2_2 = font.render(text2_2, True, (255, 150, 0))
+        screen.blit(rule_display2_2, (143, 133))
+
+        text2_3 = 'Press the spacebar to redeem powerup.'
+        rule_display2_2 = font.render(text2_3, True, (255, 150, 0))
+        screen.blit(rule_display2_2, (143, 153))
+
+        text3 = 'Traps: Oil puddles make you lose all of your coins and reset your maximum speed.'
+        rule_display3 = font.render(text3, True, (255, 200, 0))
+        screen.blit(rule_display3, (33, 193))
+
+        text3_1 = 'Hitting borders make you lose one coin.'
+        rule_display3_2 = font.render(text3_1, True, (255, 200, 0))
+        screen.blit(rule_display3_2, (102, 213))
+        pygame.display.update()
+
+
+def countdownStart():
+    running3 = True
+    while running3:
+        screen.blit(black, (450, 450))
+        for event in pygame.event.get():
+            # ends the code when the pygame window is closed or if the escape key is pressed
+            if event.type == pygame.QUIT:
+                running3 = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running3 = False
+        start_sound = pygame.mixer.Sound('Sounds/racestart.wav')
+        start_sound.play()
+        break
+    game()
+
+
+main_menu()

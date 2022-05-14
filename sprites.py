@@ -21,6 +21,16 @@ class BaseCarPlayer:
         # max velocity
         self.maxSpeed = maxSpeed
         self.rotVelocity = rotVelocity
+        self.box = None
+
+    def reset(self, maxSpeed, rotVelocity):
+        self.x = 37
+        self.y = 515
+        self.speed = 0
+        self.angle = 0
+        self.acceleration = 0.05
+        self.maxSpeed = maxSpeed
+        self.rotVelocity = rotVelocity
 
     def playerPicture(self, number):
         animation = [pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png'),
@@ -110,6 +120,12 @@ class BaseCarPlayer:
     def offroad(self):
         # the car is reduced to a portion of the original speed
         self.speed = self.speed*0.97
+        self.maxSpeed = 2
+
+    # checks the current position of the car
+    def position(self):
+        return self.x, self.y
+
 
 # uses the base car template to create the player car
 class PlayerCar(BaseCarPlayer):
