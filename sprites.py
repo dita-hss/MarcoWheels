@@ -3,7 +3,7 @@ import math
 
 # loads the images that will be used for SPRITES
 MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
-
+GREEN_CAR = pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png')
 # template that features the basic characteristic of ALL car movement and actions found in this game
 class BaseCarPlayer:
     # initializes sprite
@@ -123,3 +123,24 @@ def rotCenter(screen, image, top_left, angle):
     rotIMG = pygame.transform.rotate(image, angle)
     new_rect = rotIMG.get_rect(center=image.get_rect(topleft=top_left).center)
     screen.blit(rotIMG, new_rect.topleft)
+
+class ComputerCar(BaseCarPlayer):
+    #sets the computer's car image
+    IMG = GREEN_CAR
+    #sets the starting postion of the computer's car
+    xy = (74, 515)
+
+    #def __init__(self, , path=[]):
+       # super().__init__(max_vel, rotation_vel)
+       # self.rotVelocity = rotVelocity
+       # self.path = path
+        #self.current_point = 0
+       # self.vel = max_vel
+
+   # def draw_points(self, win):
+       # for point in self.path:
+            #pygame.draw.circle(win, (255, 0, 0), point, 5)
+
+    #def draw(self, win):
+       # super().draw(win)
+       # self.draw_points(win)

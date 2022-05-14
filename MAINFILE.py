@@ -2,42 +2,46 @@
 import pygame
 import sprites
 import powerups
+from utils import scale_image
 
 pygame.init()
 # loads the image that will be used for the background
-background = pygame.image.load('Images/track.png')
+background = scale_image(pygame.image.load('Images/track.png'), 0.9)
 # loads background music
 pygame.mixer.music.load('Sounds/Background.mp3')
 pygame.mixer.music.play(-1)
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
 oil_sound = pygame.mixer.Sound('Sounds/Oil.wav')
 # loads the image that will be used for collisions
-border = pygame.image.load('Images/border.png')
+border = scale_image(pygame.image.load('Images/border.png'), 0.9)
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 # loads the image that will be used for off-road slowing down
-dirt = pygame.image.load('Images/dirt.png')
+dirt = scale_image(pygame.image.load('Images/dirt.png'),0.9)
 # makes a mask for the dirt on the track (ignores transparent pixels)
 dirtMask = pygame.mask.from_surface(dirt)
 mushroomPic = pygame.image.load('Images/Mushroom.png')
 coinPic = pygame.image.load('Images/CoinAnimation/Coin1.png')
 none = pygame.image.load('Images/None.png')
 
+
 background_rect = background.get_rect()
-screenHeight = 850
-screenWidth = 850
+WIDTH, HEIGHT = background.get_width(), background.get_height()
+#screenHeight = 850
+#screenWidth = 850
 # frames per second
 FPS = 60
 
 # initializes pygame screen with its set caption
 pygame.init()
-screen = pygame.display.set_mode([screenWidth, screenHeight])
+SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption("Marco's Wheels")
 font = pygame.font.Font(pygame.font.get_default_font(), 20)
 clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
+computer = sprites.ComputerCar(2, 2)
 
 # coin placement and image
 coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
@@ -167,31 +171,33 @@ def main():
                 oil_sound.play()
                 coin_score = 0
 
-        screen.blit(background, background_rect)
+        SCREEN.blit(background, background_rect)
         # draws the coins in place
         for coin in coins:
-            coinAnimation.draw(screen, coin[0], coin[1])
+            coinAnimation.draw(SCREEN, coin[0], coin[1])
         # draws the oil puddles in place
         for o in oil:
-            screen.blit(oil_image, (o[0], o[1]))
+            SCREEN.blit(oil_image, (o[0], o[1]))
         # draws the mystery boxes in place
         for r in random:
-            screen.blit(random_image, (r[0], r[1]))
+            SCREEN.blit(random_image, (r[0], r[1]))
         # draws the players car
-        player.draw(screen)
+        player.draw(SCREEN)
+        # draws the computer's car
+        computer.draw(SCREEN)
 
         # HUD
         coin_display = font.render('Coins: ' + str(coin_score), True, (0, 0, 0))
         coin_rect = coin_display.get_rect()
         coin_rect.x = 10
         coin_rect.y = 10
-        screen.blit(coin_display, coin_rect)
+        SCREEN.blit(coin_display, coin_rect)
         powerup_display = font.render('Last Powerup: ', last_powerup, True)
         powerup_rect = powerup_display.get_rect()
         powerup_rect.x = 160
         powerup_rect.y = 330
-        screen.blit(powerup_display, powerup_rect)
-        screen.blit(last_powerup, (310, 333))
+        SCREEN.blit(powerup_display, powerup_rect)
+        SCREEN.blit(last_powerup, (310, 333))
 
 
         # updates the players screen to keep it from getting messy
