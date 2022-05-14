@@ -1,6 +1,6 @@
 import math
 import pygame
-from utils import scale_image, blit_rotate_center
+from utility_fxn import scale_image, blit_rotate_center
 
 DIRT = scale_image(pygame.image.load("imgs/dirt.png"))
 TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.9)

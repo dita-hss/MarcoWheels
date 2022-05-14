@@ -3,24 +3,24 @@ import pygame
 import sprites
 import powerups
 import Buttons
-from utils import scale_image
+from utility_fxn import scaling_factor
 
 
 # initializes pygame
 pygame.init()
 # loads the image that will be used for the background
-background = scale_image(pygame.image.load('Images/track.png'), 0.9)
+background = scaling_factor(pygame.image.load('Images/track.png'), 0.9)
 # loads the sound that will be used for the picking up coins
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
 # loads the sound that will be used for slipping on oil
 oil_sound = pygame.mixer.Sound('Sounds/Oil.wav')
 black = pygame.image.load('Images/black.webp')
 # loads the image that will be used for collisions
-border = scale_image(pygame.image.load('Images/border.png'), 0.9)
+border = scaling_factor(pygame.image.load('Images/border.png'), 0.9)
 # makes a mask for the border (ignores transparent pixels)
 borderMask = pygame.mask.from_surface(border)
 # loads the image that will be used for off-road slowing down
-dirt = scale_image(pygame.image.load('Images/dirt.png'), 0.9)
+dirt = scaling_factor(pygame.image.load('Images/dirt.png'), 0.9)
 # makes a mask for the dirt on the track (ignores transparent pixels)
 dirtMask = pygame.mask.from_surface(dirt)
 mushroomPic = pygame.image.load('Images/Mushroom.png')
@@ -35,6 +35,11 @@ WIDTH, HEIGHT = background.get_width(), background.get_height()
 #screenWidth = 850
 # frames per second
 FPS = 60
+PATH = [(65, 412), (68, 281), (72, 132), (125, 59), (211, 74), (294, 176),
+        (418, 232), (483, 144), (543, 66), (676, 72), (712, 220), (639, 316),
+        (492, 354), (301, 433), (372, 485), (507, 477), (697, 510), (704, 612),
+        (602, 690), (474, 657), (392, 588), (325, 632), (229, 713), (107, 683),
+        (73, 568), (71, 435)]
 
 # initializes pygame screen with its set caption
 pygame.init()
@@ -45,7 +50,8 @@ clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar (2,2)
+computer = sprites.ComputerCar (2,2, PATH)
+
 button = Buttons.Button
 # coin placement and image
 coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
@@ -140,6 +146,8 @@ def game():
                 main_menu()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
+        # moves the computer car to follow the points set in PATH
+        computer.move()
         # each time the loop runs, and there is no movement after previous movement, de acceleration is activated
         moving = False
         keys = pygame.key.get_pressed()
@@ -147,12 +155,12 @@ def game():
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player.steering(left=True)
             player.playerPicture(4)
-        # when player presses down on the right arrow key, the car rotates towards the left
-        if keys[pygame.K_RIGHT or keys[pygame.K_d]]:
+        # when player presses down on the right arrow key, the car rotates towards the right
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             player.steering(right=True)
             player.playerPicture(6)
         # when player presses down on the up key, the car begins accelerating forward
-        if keys[pygame.K_UP or keys[pygame.K_w]]:
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
             moving = True
             player.accelerate_for()
             if keys[pygame.K_UP] and keys[pygame.K_LEFT]:
@@ -162,7 +170,7 @@ def game():
             else:
                 player.playerPicture(1)
         # when player presses down on the up key, the car begins accelerating backwards
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             moving = True
             player.accelerate_back()
         if keys[pygame.K_SPACE]:
@@ -249,7 +257,11 @@ def game():
             screen.blit(random_image, (r[0], r[1]))
         # draws the players car
         player.draw(screen)
+        # draws the computer's car
         computer.draw(screen)
+
+
+
 
         # HUD
         coin_display = font.render('Coins: ' + str(coin_score), True, (0, 0, 0))
@@ -321,5 +333,6 @@ def countdownStart():
         break
     game()
 
-
 main_menu()
+print(computer.path)
+pygame.quit()

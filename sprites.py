@@ -1,10 +1,12 @@
 import pygame
 import math
-from utils import scale_image
+from utility_fxn import scaling_factor
 
 # loads the images that will be used for SPRITES
 MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
-GREEN_CAR = scale_image(pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png'), 0.4)
+GREEN_CAR = scaling_factor(pygame.image.load('/Users/Jewel M/PycharmProjects/MarcoWheels/Images/green-car.png'), 0.4)
+
+
 # template that features the basic characteristic of ALL car movement and actions found in this game
 class BaseCarPlayer:
     # initializes sprite
@@ -49,7 +51,7 @@ class BaseCarPlayer:
 
     # coin advantage, more coins will grant a higher maximum speed
     def changeMax(self, coin_score):
-        self.maxSpeed = self.maxSpeed + coin_score*0.015
+        self.maxSpeed = self.maxSpeed + coin_score * 0.015
 
     # tells the car how to accelerate everytime that the up button is pushed/held
     def accelerate_for(self):
@@ -120,7 +122,7 @@ class BaseCarPlayer:
     # defines what to do in the case that the car goes off-road
     def offroad(self):
         # the car is reduced to a portion of the original speed
-        self.speed = self.speed*0.97
+        self.speed = self.speed * 0.97
         self.maxSpeed = 2
 
     # checks the current position of the car
@@ -135,29 +137,66 @@ class PlayerCar(BaseCarPlayer):
     # sets the starting position of the player's car!
     xy = (37, 515)
 
+
 # rotates an image around its center
 def rotCenter(screen, image, top_left, angle):
     rotIMG = pygame.transform.rotate(image, angle)
     new_rect = rotIMG.get_rect(center=image.get_rect(topleft=top_left).center)
     screen.blit(rotIMG, new_rect.topleft)
 
+
 class ComputerCar(BaseCarPlayer):
-    #sets the computer's car image
+    # sets the computer's car image
     IMG = GREEN_CAR
-    #sets the starting postion of the computer's car
-    xy = (74, 515)
+    # sets the starting position of the computer's car
+    xy = (70, 515)
 
-    #def __init__(self, , path=[]):
-       # super().__init__(max_vel, rotation_vel)
-       # self.rotVelocity = rotVelocity
-       # self.path = path
-        #self.current_point = 0
-       # self.vel = max_vel
+    def __init__(self, maxSpeed, rotVelocity, path=[]):
+        super().__init__(maxSpeed, rotVelocity)
+        self.path = path
+        self.current_point = 0
+        self.speed = maxSpeed
 
-   # def draw_points(self, win):
-       # for point in self.path:
-            #pygame.draw.circle(win, (255, 0, 0), point, 5)
+    def draw_points(self, screen):
+        for point in self.path:
+            pygame.draw.circle(screen, (255, 0, 0), point, 5)
 
-    #def draw(self, win):
-       # super().draw(win)
-       # self.draw_points(win)
+    def draw(self, screen):
+        super().draw(screen)
+        self.draw_points(screen)
+
+    def calculate_angle(self):
+        target_x, target_y = self.path[self.current_point]
+        x_diff = target_x - self.x
+        y_diff = target_y - self.y
+
+        if y_diff == 0:
+            desired_radian_angle = math.pi / 2
+        else:
+            desired_radian_angle = math.atan(x_diff / y_diff)
+
+        if target_y > self.y:
+            desired_radian_angle += math.pi
+
+        difference_in_angle = self.angle - math.degrees(desired_radian_angle)
+        if difference_in_angle >= 180:
+            difference_in_angle -= 360
+
+        if difference_in_angle > 0:
+            self.angle -= min(self.rotVelocity, abs(difference_in_angle))
+        else:
+            self.angle += min(self.rotVelocity, abs(difference_in_angle))
+
+    def update_path_point(self):
+        target_update = self.path[self.current_point]
+        rect_computer_car = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        if rect_computer_car.collidepoint(*target_update):
+            self.current_point += 1
+
+    def move(self):
+        if self.current_point >= len(self.path):
+            return
+
+        self.calculate_angle()
+        self.update_path_point()
+        #super().move()
