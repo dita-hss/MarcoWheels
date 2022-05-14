@@ -193,10 +193,10 @@ class ComputerCar(BaseCarPlayer):
         if rect_computer_car.collidepoint(*target_update):
             self.current_point += 1
 
-    def move(self):
+    def accelerate_for(self):
         if self.current_point >= len(self.path):
             return
 
         self.calculate_angle()
         self.update_path_point()
-        #super().move()
+        super().accelerate_for()

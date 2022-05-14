@@ -35,11 +35,11 @@ WIDTH, HEIGHT = background.get_width(), background.get_height()
 #screenWidth = 850
 # frames per second
 FPS = 60
-PATH = [(65, 412), (68, 281), (72, 132), (125, 59), (211, 74), (294, 176),
-        (418, 232), (483, 144), (543, 66), (676, 72), (712, 220), (639, 316),
-        (492, 354), (301, 433), (372, 485), (507, 477), (697, 510), (704, 612),
-        (602, 690), (474, 657), (392, 588), (325, 632), (229, 713), (107, 683),
-        (73, 568), (71, 435)]
+PATH = [(60, 106), (80, 100), (255, 96), (327, 227),
+         (460, 201), (553, 43), (700, 111), (700, 298),
+         (335, 379), (301, 488), (492, 472), (709, 509),
+         (682, 668), (512, 688), (391, 605), (185, 723),
+         (64, 595), (59, 320)]
 
 # initializes pygame screen with its set caption
 pygame.init()
@@ -146,8 +146,14 @@ def game():
                 main_menu()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
+
+            # this code allows us to set the points for the computer car
+            #if event.type == pygame.MOUSEBUTTONDOWN:
+                #pos = pygame.mouse.get_pos()
+                #computer.path.append(pos)
         # moves the computer car to follow the points set in PATH
-        computer.move()
+        computer.accelerate_for()
+
         # each time the loop runs, and there is no movement after previous movement, de acceleration is activated
         moving = False
         keys = pygame.key.get_pressed()
