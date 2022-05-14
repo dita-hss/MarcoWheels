@@ -35,11 +35,10 @@ WIDTH, HEIGHT = background.get_width(), background.get_height()
 #screenWidth = 850
 # frames per second
 FPS = 60
-PATH = [(60, 106), (80, 100), (255, 96), (327, 227),
-         (460, 201), (553, 43), (700, 111), (700, 298),
-         (335, 379), (301, 488), (492, 472), (709, 509),
-         (682, 668), (512, 688), (391, 605), (185, 723),
-         (64, 595), (59, 320)]
+PATH = [(45, 200), (90, 80),  (200, 50), (438, 226),
+         (537, 58), (695, 106), (689, 304), (289, 402),
+         (305, 481), (642, 470), (684, 651), (512, 691),
+         (383, 604), (242, 702), (89, 682), (60, 321)]
 
 # initializes pygame screen with its set caption
 pygame.init()
@@ -50,7 +49,7 @@ clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar (2,2, PATH)
+computer = sprites.ComputerCar (2,6,PATH)
 
 button = Buttons.Button
 # coin placement and image

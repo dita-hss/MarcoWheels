@@ -27,8 +27,8 @@ class BaseCarPlayer:
         self.box = None
 
     def reset(self, maxSpeed, rotVelocity):
-        self.x = 37
-        self.y = 515
+        self.x = 32
+        self.y = 465
         self.speed = 0
         self.angle = 0
         self.acceleration = 0.05
@@ -134,9 +134,7 @@ class BaseCarPlayer:
 class PlayerCar(BaseCarPlayer):
     # sets the player's car image
     IMG = MARCO_CAR
-    # sets the starting position of the player's car!
-    xy = (37, 515)
-
+    xy = (32, 465)
 
 # rotates an image around its center
 def rotCenter(screen, image, top_left, angle):
@@ -149,7 +147,7 @@ class ComputerCar(BaseCarPlayer):
     # sets the computer's car image
     IMG = GREEN_CAR
     # sets the starting position of the computer's car
-    xy = (70, 515)
+    xy = (64, 447)
 
     def __init__(self, maxSpeed, rotVelocity, path=[]):
         super().__init__(maxSpeed, rotVelocity)
