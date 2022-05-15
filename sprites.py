@@ -129,6 +129,9 @@ class BaseCarPlayer:
     def position(self):
         return self.x, self.y
 
+    def banana_and_oil_slip(self):
+        self.angle = -self.angle
+
 
 # uses the base car template to create the player car
 class PlayerCar(BaseCarPlayer):
@@ -224,3 +227,5 @@ class ComputerCar(BaseCarPlayer):
         poi = mask.overlap(computerMask, offset)
         return poi
 
+    def bananaSlip(self):
+        self.current_spot -= 1

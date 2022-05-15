@@ -12,7 +12,7 @@ class Button:
 		self.rect = self.image.get_rect(center=(self.x, self.y))
 		self.text_rect = self.text.get_rect(center=(self.x, self.y))
 
-	def mouseInput(self, position):
+	def buttonPosition(self, position):
 		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
 			return True
 		return False
