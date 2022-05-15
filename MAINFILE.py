@@ -141,7 +141,8 @@ def main_menu():
 def game():
     # game loop
     box = []
-    race_count = 0
+    player_count = 0
+    computer_count = 0
     last_powerup = none
     sprites.BaseCarPlayer.reset(player, 2, 2)
     running = True
@@ -246,9 +247,14 @@ def game():
                 #break
 
         if player.collisions(finishLineMask, 0, 0) is not None:
-            race_count += 1
-            if race_count == 20:
+            player_count += 1
+            if player_count == 20:
                 end_gamePlayerWin()
+                break
+        if computer.collisions(finishLineMask, 0, 0) is not None:
+            computer_count += 1
+            if computer_count == 20:
+                end_gamePlayerLose()
                 break
 
         for r in random:
@@ -426,7 +432,7 @@ def end_gamePlayerLose():
         screen.fill((0, 0, 0))
         text = 'YOU LOSE'
         ready_display = font.render(text, True, (255, 255, 255))
-        screen.blit(ready_display, (260, 370))
+        screen.blit(ready_display, (315, 370))
         text1 = 'press space to restart or esc to quit'
         ready_display1 = font.render(text1, True, (255, 255, 255))
         screen.blit(ready_display1, (220, 570))

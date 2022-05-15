@@ -207,3 +207,12 @@ class ComputerCar(BaseCarPlayer):
         self.angle = 0
         self.current_spot = 0
 
+    def collisions(self, mask, x, y):
+        # creates a car mask (ignores transparent pixels)
+        computerMask = pygame.mask.from_surface(self.image)
+        # checks the offset position of the car relative to the border
+        offset = (int(self.x - x), int(self.y - y))
+        # looks for a point of intersection between the car and the border
+        poi = mask.overlap(computerMask, offset)
+        return poi
+
