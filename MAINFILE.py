@@ -69,15 +69,6 @@ coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
             pygame.image.load('Images/CoinAnimation/Coin5.png')]
 coinAnimation = powerups.Animation(coinList)
 coinMask = pygame.mask.from_surface(coinList[1])
-coins = [pygame.Rect(30, 284, 41, 50), pygame.Rect(54, 284, 41, 50), pygame.Rect(78, 284, 41, 50),
-         pygame.Rect(30, 202, 41, 50), pygame.Rect(54, 202, 41, 50), pygame.Rect(78, 202, 41, 50),
-         pygame.Rect(164, 24, 41, 50), pygame.Rect(164, 68, 41, 50), pygame.Rect(237, 82, 41, 50),
-         pygame.Rect(320, 205, 41, 50), pygame.Rect(308, 220, 41, 50), pygame.Rect(297, 235, 41, 50),
-         pygame.Rect(595, 38, 41, 50), pygame.Rect(595, 62, 41, 50), pygame.Rect(670, 285, 41, 50),
-         pygame.Rect(690, 305, 41, 50), pygame.Rect(300, 400, 41, 50), pygame.Rect(270, 435, 41, 50),
-         pygame.Rect(300, 470, 41, 50), pygame.Rect(620, 450, 41, 50), pygame.Rect(620, 485, 41, 50),
-         pygame.Rect(455, 695, 41, 50), pygame.Rect(476, 686, 41, 50), pygame.Rect(497, 677, 41, 50),
-         pygame.Rect(174, 710, 41, 50), pygame.Rect(174, 740, 41, 50), pygame.Rect(66, 622, 41, 50)]
 # oil puddle placement and image
 oil_image = pygame.image.load('Images/oil.png')
 oilMask = pygame.mask.from_surface(oil_image)
@@ -140,6 +131,20 @@ def main_menu():
 
 def game():
     # game loop
+    coins = [pygame.Rect(30, 284, 41, 50), pygame.Rect(54, 284, 41, 50), pygame.Rect(78, 284, 41, 50),
+             pygame.Rect(30, 202, 41, 50), pygame.Rect(54, 202, 41, 50), pygame.Rect(78, 202, 41, 50),
+             pygame.Rect(164, 24, 41, 50), pygame.Rect(164, 68, 41, 50), pygame.Rect(237, 82, 41, 50),
+             pygame.Rect(320, 205, 41, 50), pygame.Rect(308, 220, 41, 50), pygame.Rect(297, 235, 41, 50),
+             pygame.Rect(595, 38, 41, 50), pygame.Rect(595, 62, 41, 50), pygame.Rect(670, 285, 41, 50),
+             pygame.Rect(690, 305, 41, 50), pygame.Rect(300, 400, 41, 50), pygame.Rect(270, 435, 41, 50),
+             pygame.Rect(300, 470, 41, 50), pygame.Rect(620, 450, 41, 50), pygame.Rect(620, 485, 41, 50),
+             pygame.Rect(455, 695, 41, 50), pygame.Rect(476, 686, 41, 50), pygame.Rect(497, 677, 41, 50),
+             pygame.Rect(174, 710, 41, 50), pygame.Rect(174, 740, 41, 50), pygame.Rect(66, 622, 41, 50)]
+    random = [pygame.Rect(30, 139, 41, 50), pygame.Rect(70, 139, 41, 50), pygame.Rect(160, 42, 41, 50),
+              pygame.Rect(428, 207, 41, 50), pygame.Rect(448, 227, 41, 50), pygame.Rect(690, 175, 41, 50),
+              pygame.Rect(715, 175, 41, 50), pygame.Rect(666, 300, 41, 50), pygame.Rect(266, 402, 41, 50),
+              pygame.Rect(266, 465, 41, 50), pygame.Rect(600, 464, 41, 50), pygame.Rect(380, 585, 41, 50),
+              pygame.Rect(380, 615, 41, 50), pygame.Rect(30, 550, 41, 50), pygame.Rect(70, 550, 41, 50)]
     box = []
     player_count = 0
     computer_count = 0
