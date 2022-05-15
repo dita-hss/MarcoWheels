@@ -77,12 +77,6 @@ oil = [pygame.Rect(208, 39, 41, 50), pygame.Rect(400, 246, 41, 50), pygame.Rect(
 # mystery box placement and image
 random_image = pygame.image.load('Images/Random.png')
 randomMask = pygame.mask.from_surface(random_image)
-random = [pygame.Rect(30, 139, 41, 50), pygame.Rect(70, 139, 41, 50), pygame.Rect(160, 42, 41, 50),
-          pygame.Rect(428, 207, 41, 50), pygame.Rect(448, 227, 41, 50), pygame.Rect(690, 175, 41, 50),
-          pygame.Rect(715, 175, 41, 50), pygame.Rect(666, 300, 41, 50), pygame.Rect(266, 402, 41, 50),
-          pygame.Rect(266, 465, 41, 50), pygame.Rect(600, 464, 41, 50), pygame.Rect(380, 585, 41, 50),
-          pygame.Rect(380, 615, 41, 50), pygame.Rect(30, 550, 41, 50), pygame.Rect(70, 550, 41, 50)]
-
 
 def main_menu():
     menuBackground = pygame.image.load('Images/menubackground.png')
@@ -140,6 +134,7 @@ def game():
              pygame.Rect(300, 470, 41, 50), pygame.Rect(620, 450, 41, 50), pygame.Rect(620, 485, 41, 50),
              pygame.Rect(455, 695, 41, 50), pygame.Rect(476, 686, 41, 50), pygame.Rect(497, 677, 41, 50),
              pygame.Rect(174, 710, 41, 50), pygame.Rect(174, 740, 41, 50), pygame.Rect(66, 622, 41, 50)]
+
     random = [pygame.Rect(30, 139, 41, 50), pygame.Rect(70, 139, 41, 50), pygame.Rect(160, 42, 41, 50),
               pygame.Rect(428, 207, 41, 50), pygame.Rect(448, 227, 41, 50), pygame.Rect(690, 175, 41, 50),
               pygame.Rect(715, 175, 41, 50), pygame.Rect(666, 300, 41, 50), pygame.Rect(266, 402, 41, 50),
@@ -165,6 +160,7 @@ def game():
             # ends the code when the pygame window is closed or if the escape key is pressed
             if event.type == pygame.QUIT:
                 main_menu()
+                break
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
 
@@ -264,15 +260,16 @@ def game():
 
         for r in random:
             if player.collisions(randomMask, r[0], r[1]) is not None:
-                if powerups.random() == 'coin':
+                player_powerup = powerups.random()
+                if player_powerup == 'coin':
                     box = []
                     last_powerup = coinPic
                     box.append('coin')
-                elif powerups.random() == 'mushroom':
+                elif player_powerup == 'mushroom':
                     box = []
                     last_powerup = mushroomPic
                     box.append('mushroom')
-                elif powerups.random() == 'banana':
+                elif player_powerup == 'banana':
                     box = []
                     last_powerup = bananaPic
                     box.append('banana')
