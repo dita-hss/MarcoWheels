@@ -154,56 +154,56 @@ class ComputerCar(BaseCarPlayer):
     def __init__(self, maxSpeed, rotVelocity, path=[]):
         super().__init__(maxSpeed, rotVelocity)
         self.path = path
-        self.current_point = 0
+        self.current_spot = 0
         self.speed = maxSpeed
 
-    def draw_points(self, screen):
+    def draw_path(self, screen):
         for point in self.path:
             pygame.draw.circle(screen, (255, 0, 0), point, 5)
 
     def draw(self, screen):
         super().draw(screen)
-        #self.draw_points(screen)
+        #self.draw_path(screen)
 
-    def calculate_angle(self):
-        target_x, target_y = self.path[self.current_point]
-        x_diff = target_x - self.x
-        y_diff = target_y - self.y
+    def rot_angle(self):
+        x_dir, y_dir = self.path[self.current_spot]
+        displacement_x = x_dir - self.x
+        displacement_y = y_dir - self.y
 
-        if y_diff == 0:
-            desired_radian_angle = math.pi / 2
+        if displacement_y == 0:
+            angle_rad = math.pi / 2
         else:
-            desired_radian_angle = math.atan(x_diff / y_diff)
+            angle_rad = math.atan(displacement_x / displacement_y)
 
-        if target_y > self.y:
-            desired_radian_angle += math.pi
+        if y_dir > self.y:
+            angle_rad += math.pi
 
-        difference_in_angle = self.angle - math.degrees(desired_radian_angle)
-        if difference_in_angle >= 180:
-            difference_in_angle -= 360
+        angle_diff = self.angle - math.degrees(angle_rad)
+        if angle_diff >= 180:
+            angle_diff -= 360
 
-        if difference_in_angle > 0:
-            self.angle -= min(self.rotVelocity, abs(difference_in_angle))
+        if angle_diff > 0:
+            self.angle -= min(self.rotVelocity, abs(angle_diff))
         else:
-            self.angle += min(self.rotVelocity, abs(difference_in_angle))
+            self.angle += min(self.rotVelocity, abs(angle_diff))
 
-    def update_path_point(self):
-        target_update = self.path[self.current_point]
+    def target_path_update(self):
+        target_update = self.path[self.current_spot]
         rect_computer_car = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
         if rect_computer_car.collidepoint(*target_update):
-            self.current_point += 1
+            self.current_spot += 1
 
     def accelerate_for(self):
-        if self.current_point >= len(self.path):
+        if self.current_spot >= len(self.path):
             return
 
-        self.calculate_angle()
-        self.update_path_point()
+        self.rot_angle()
+        self.target_path_update()
         super().accelerate_for()
 
     def reset(self):
         self.x = 70
         self.y = 515
         self.angle = 0
-        self.current_point = 0
+        self.current_spot = 0
 

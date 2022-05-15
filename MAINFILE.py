@@ -16,6 +16,7 @@ finishLine = scaling_factor(pygame.image.load('Images/finishline.png'), 0.9)
 # makes a mask for the border (ignores transparent pixels)
 finishLineMask = pygame.mask.from_surface(finishLine)
 # loads the sound that will be used for the picking up coins
+#finish_pos = (63, 325)
 coin_sound = pygame.mixer.Sound('Sounds/Coin.wav')
 # loads the sound that will be used for slipping on oil
 oil_sound = pygame.mixer.Sound('Sounds/Oil.wav')
@@ -236,6 +237,13 @@ def game():
         # if the car starts driving on the dirt, the car will slow down
         if player.collisions(dirtMask, 0, 0) is not None:
             player.offroad()
+
+        #computer_collisions_poi = computer.collisions(finishLineMask, 0, 0)
+        #if computer_collisions_poi is not None:
+            #race_count +=1
+            #if race_count == 20:
+                #end_gamePlayerLose()
+                #break
 
         if player.collisions(finishLineMask, 0, 0) is not None:
             race_count += 1
