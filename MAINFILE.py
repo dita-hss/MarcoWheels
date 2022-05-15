@@ -75,7 +75,7 @@ PATH = [(51, 163), (77, 91), (208, 39), (293, 159),
 FPS = 60
 # groups
 player = sprites.PlayerCar(4, 2)
-computer = sprites.ComputerCar (2,10, PATH)
+computer = sprites.ComputerCar(2, 10, PATH)
 
 
 def main_menu():
