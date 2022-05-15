@@ -134,6 +134,7 @@ class BaseCarPlayer:
 class PlayerCar(BaseCarPlayer):
     # sets the player's car image
     IMG = MARCO_CAR
+    # sets the player's car starting position
     xy = (32, 465)
 
 # rotates an image around its center
@@ -149,6 +150,7 @@ class ComputerCar(BaseCarPlayer):
     # sets the starting position of the computer's car
     xy = (64, 447)
 
+    # reinitializes sequence from BaseCarPlayer
     def __init__(self, maxSpeed, rotVelocity, path=[]):
         super().__init__(maxSpeed, rotVelocity)
         self.path = path
@@ -161,7 +163,7 @@ class ComputerCar(BaseCarPlayer):
 
     def draw(self, screen):
         super().draw(screen)
-        self.draw_points(screen)
+        #self.draw_points(screen)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]

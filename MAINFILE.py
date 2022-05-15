@@ -42,7 +42,7 @@ screenHeight = background.get_height()
 # frames per second
 FPS = 60
 # set points the computer car will follow
-PATH = [(51, 163), (77, 91), (168, 39), (293, 159),
+PATH = [(51, 163), (77, 91), (208, 39), (293, 159),
         (357, 238), (483, 192), (516, 74), (641, 38),
         (720, 167), (682, 304), (322, 387), (301, 473),
         (647, 472), (723, 582), (643, 691), (530, 696),
@@ -56,8 +56,8 @@ font = pygame.font.Font(pygame.font.get_default_font(), 20)
 clock = pygame.time.Clock()
 
 # groups
-player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar (1.75,10, PATH)
+player = sprites.PlayerCar(4, 2)
+computer = sprites.ComputerCar (2,10, PATH)
 
 button = Buttons.Button
 # coin placement and image
@@ -74,24 +74,22 @@ coins = [pygame.Rect(30, 284, 41, 50), pygame.Rect(54, 284, 41, 50), pygame.Rect
          pygame.Rect(320, 205, 41, 50), pygame.Rect(308, 220, 41, 50), pygame.Rect(297, 235, 41, 50),
          pygame.Rect(595, 38, 41, 50), pygame.Rect(595, 62, 41, 50), pygame.Rect(670, 285, 41, 50),
          pygame.Rect(690, 305, 41, 50), pygame.Rect(300, 400, 41, 50), pygame.Rect(270, 435, 41, 50),
-         pygame.Rect(300, 470, 41, 50) #done up til here
-         pygame.Rect(679, 502, 41, 50), pygame.Rect(680, 530, 41, 50),
-         pygame.Rect(487, 715, 41, 50), pygame.Rect(508, 706, 41, 50), pygame.Rect(528, 695, 41, 50),
-         pygame.Rect(194, 788, 41, 50), pygame.Rect(194, 816, 41, 50), pygame.Rect(60, 617, 41, 50)]
+         pygame.Rect(300, 470, 41, 50), pygame.Rect(620, 450, 41, 50), pygame.Rect(620, 485, 41, 50),
+         pygame.Rect(455, 695, 41, 50), pygame.Rect(476, 686, 41, 50), pygame.Rect(497, 677, 41, 50),
+         pygame.Rect(174, 710, 41, 50), pygame.Rect(174, 740, 41, 50), pygame.Rect(66, 622, 41, 50)]
 # oil puddle placement and image
 oil_image = pygame.image.load('Images/oil.png')
 oilMask = pygame.mask.from_surface(oil_image)
-oil = [pygame.Rect(107, 103, 41, 50), pygame.Rect(586, 59, 41, 50), pygame.Rect(461, 527, 41, 50),
-       pygame.Rect(781, 725, 41, 50), pygame.Rect(166, 802, 41, 50), pygame.Rect(52, 657, 41, 50)]
+oil = [pygame.Rect(208, 39, 41, 50), pygame.Rect(400, 246, 41, 50), pygame.Rect(676, 59, 41, 50),
+       pygame.Rect(461, 450, 41, 50), pygame.Rect(700, 663, 41, 50), pygame.Rect(80, 714, 41, 50)]
 # mystery box placement and image
 random_image = pygame.image.load('Images/Random.png')
 randomMask = pygame.mask.from_surface(random_image)
-random = [pygame.Rect(40, 139, 41, 50), pygame.Rect(80, 139, 41, 50), pygame.Rect(160, 47, 41, 50),
-          pygame.Rect(498, 213, 41, 50), pygame.Rect(513, 225, 41, 50), pygame.Rect(530, 235, 41, 50),
-          pygame.Rect(764, 225, 41, 50), pygame.Rect(797, 225, 41, 50), pygame.Rect(666, 349, 41, 50),
-          pygame.Rect(278, 452, 41, 50), pygame.Rect(279, 520, 41, 50), pygame.Rect(425, 541, 41, 50),
-          pygame.Rect(631, 753, 41, 50), pygame.Rect(631, 784, 41, 50), pygame.Rect(37, 554, 41, 50),
-          pygame.Rect(79, 554, 41, 50)]
+random = [pygame.Rect(30, 139, 41, 50), pygame.Rect(70, 139, 41, 50), pygame.Rect(160, 42, 41, 50),
+          pygame.Rect(428, 207, 41, 50), pygame.Rect(448, 227, 41, 50), pygame.Rect(690, 175, 41, 50),
+          pygame.Rect(715, 175, 41, 50), pygame.Rect(666, 300, 41, 50), pygame.Rect(266, 402, 41, 50),
+          pygame.Rect(266, 465, 41, 50), pygame.Rect(600, 464, 41, 50), pygame.Rect(380, 585, 41, 50),
+          pygame.Rect(380, 615, 41, 50), pygame.Rect(30, 550, 41, 50), pygame.Rect(70, 550, 41, 50)]
 
 
 def main_menu():
@@ -167,6 +165,7 @@ def game():
             #if event.type == pygame.MOUSEBUTTONDOWN:
                 #pos = pygame.mouse.get_pos()
                 #computer.path.append(pos)
+
         # moves the computer car to follow the points set in PATH
         computer.accelerate_for()
 
