@@ -150,21 +150,24 @@ class ComputerCar(BaseCarPlayer):
     # sets the starting position of the computer's car
     xy = (64, 447)
 
-    # reinitializes sequence from BaseCarPlayer
+    # reinitializes sequence from BaseCarPlayer and sets an empty path
     def __init__(self, maxSpeed, rotVelocity, path=[]):
         super().__init__(maxSpeed, rotVelocity)
         self.path = path
         self.current_spot = 0
         self.speed = maxSpeed
 
+    # draws the points the computer will follow and sets the size of the point
     def draw_path(self, screen):
         for point in self.path:
             pygame.draw.circle(screen, (255, 0, 0), point, 5)
 
+    # allows the points to be seen on screen
     def draw(self, screen):
         super().draw(screen)
         #self.draw_path(screen)
 
+    # sets the computer car's rotation so that it takes the most effective route to next point
     def rot_angle(self):
         x_dir, y_dir = self.path[self.current_spot]
         displacement_x = x_dir - self.x
@@ -178,6 +181,7 @@ class ComputerCar(BaseCarPlayer):
         if y_dir > self.y:
             angle_rad += math.pi
 
+        # if the difference in the angle is greater than 180 degrees, subtract 360 to get desired angle
         angle_diff = self.angle - math.degrees(angle_rad)
         if angle_diff >= 180:
             angle_diff -= 360
@@ -187,12 +191,14 @@ class ComputerCar(BaseCarPlayer):
         else:
             self.angle += min(self.rotVelocity, abs(angle_diff))
 
+    # updates the path the computer follows so that it knows what point it current is at
     def target_path_update(self):
         target_update = self.path[self.current_spot]
         rect_computer_car = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
         if rect_computer_car.collidepoint(*target_update):
             self.current_spot += 1
 
+    # moves the computer car  and debugs a glitch if the computer car where to be at a point that doesn't exist in path
     def accelerate_for(self):
         if self.current_spot >= len(self.path):
             return
@@ -201,12 +207,14 @@ class ComputerCar(BaseCarPlayer):
         self.target_path_update()
         super().accelerate_for()
 
+    # resets computer car to start position
     def reset(self):
         self.x = 70
         self.y = 515
         self.angle = 0
         self.current_spot = 0
 
+    # creates collisions with points of interests (poi)
     def collisions(self, mask, x, y):
         # creates a car mask (ignores transparent pixels)
         computerMask = pygame.mask.from_surface(self.image)

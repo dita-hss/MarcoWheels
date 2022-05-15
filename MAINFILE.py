@@ -217,6 +217,7 @@ def game():
                 banana_sound.play()
                 last_powerup = none
                 box = []
+                pygame.display.update()
 
         # otherwise, the car begins de-accelerating
         if not moving:
@@ -239,13 +240,6 @@ def game():
         # if the car starts driving on the dirt, the car will slow down
         if player.collisions(dirtMask, 0, 0) is not None:
             player.offroad()
-
-        #computer_collisions_poi = computer.collisions(finishLineMask, 0, 0)
-        #if computer_collisions_poi is not None:
-            #race_count +=1
-            #if race_count == 20:
-                #end_gamePlayerLose()
-                #break
 
         if player.collisions(finishLineMask, 0, 0) is not None:
             player_count += 1
@@ -336,6 +330,10 @@ def rules():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running2 = False
 
+            keys2 = pygame.key.get_pressed()
+            if keys2[pygame.K_m]:
+                main_menu()
+
         text = 'Player movement: You can use the arrow keys or WASD.'
         rule_display = font.render(text, True, (255, 100, 0))
         screen.blit(rule_display, (33, 53))
@@ -367,6 +365,11 @@ def rules():
         text3_2 = 'Hitting borders make you lose one coin.'
         rule_display3_2 = font.render(text3_2, True, (255, 200, 0))
         screen.blit(rule_display3_2, (100, 233))
+
+
+        text_4 = 'press m to go back to Main Menu'
+        rule_display4 = font.render(text_4, True, (255, 0, 0))
+        screen.blit(rule_display4, (200, 600))
         pygame.display.update()
 
 
