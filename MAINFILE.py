@@ -35,10 +35,12 @@ WIDTH, HEIGHT = background.get_width(), background.get_height()
 #screenWidth = 850
 # frames per second
 FPS = 60
-PATH = [(45, 200), (90, 80),  (200, 50), (438, 226),
-         (537, 58), (695, 106), (689, 304), (289, 402),
-         (305, 481), (642, 470), (684, 651), (512, 691),
-         (383, 604), (242, 702), (89, 682), (60, 321)]
+# set points the computer car will follow
+PATH = [(51, 163), (77, 91), (168, 39), (293, 159),
+        (357, 238), (483, 192), (516, 74), (641, 38),
+        (720, 167), (682, 304), (322, 387), (301, 473),
+        (647, 472), (723, 582), (643, 691), (530, 696),
+        (435, 613), (328, 631), (202, 727), (73, 655), (63, 325)]
 
 # initializes pygame screen with its set caption
 pygame.init()
@@ -49,7 +51,7 @@ clock = pygame.time.Clock()
 
 # groups
 player = sprites.PlayerCar(2, 2)
-computer = sprites.ComputerCar (2,6,PATH)
+computer = sprites.ComputerCar (1.75,10, PATH)
 
 button = Buttons.Button
 # coin placement and image
@@ -60,13 +62,14 @@ coinList = [pygame.image.load('Images/CoinAnimation/Coin1.png'),
             pygame.image.load('Images/CoinAnimation/Coin5.png')]
 coinAnimation = powerups.Animation(coinList)
 coinMask = pygame.mask.from_surface(coinList[1])
-coins = [pygame.Rect(38, 284, 41, 50), pygame.Rect(62, 284, 41, 50), pygame.Rect(85, 284, 41, 50),
-         pygame.Rect(38, 202, 41, 50), pygame.Rect(62, 202, 41, 50), pygame.Rect(85, 202, 41, 50),
-         pygame.Rect(164, 29, 41, 50), pygame.Rect(164, 73, 41, 50), pygame.Rect(248, 82, 41, 50),
-         pygame.Rect(360, 228, 41, 50), pygame.Rect(348, 243, 41, 50), pygame.Rect(337, 258, 41, 50),
-         pygame.Rect(648, 38, 41, 50), pygame.Rect(649, 62, 41, 50), pygame.Rect(667, 339, 41, 50),
-         pygame.Rect(674, 369, 41, 50), pygame.Rect(378, 443, 41, 50), pygame.Rect(343, 473, 41, 50),
-         pygame.Rect(357, 506, 41, 50), pygame.Rect(679, 502, 41, 50), pygame.Rect(680, 530, 41, 50),
+coins = [pygame.Rect(30, 284, 41, 50), pygame.Rect(54, 284, 41, 50), pygame.Rect(78, 284, 41, 50),
+         pygame.Rect(30, 202, 41, 50), pygame.Rect(54, 202, 41, 50), pygame.Rect(78, 202, 41, 50),
+         pygame.Rect(164, 24, 41, 50), pygame.Rect(164, 68, 41, 50), pygame.Rect(237, 82, 41, 50),
+         pygame.Rect(320, 205, 41, 50), pygame.Rect(308, 220, 41, 50), pygame.Rect(297, 235, 41, 50),
+         pygame.Rect(595, 38, 41, 50), pygame.Rect(595, 62, 41, 50), pygame.Rect(670, 285, 41, 50),
+         pygame.Rect(690, 305, 41, 50), pygame.Rect(300, 400, 41, 50), pygame.Rect(270, 435, 41, 50),
+         pygame.Rect(300, 470, 41, 50) #done up til here
+         pygame.Rect(679, 502, 41, 50), pygame.Rect(680, 530, 41, 50),
          pygame.Rect(487, 715, 41, 50), pygame.Rect(508, 706, 41, 50), pygame.Rect(528, 695, 41, 50),
          pygame.Rect(194, 788, 41, 50), pygame.Rect(194, 816, 41, 50), pygame.Rect(60, 617, 41, 50)]
 # oil puddle placement and image
