@@ -356,13 +356,17 @@ def rules():
         rule_display2_2 = font.render(text2_3, True, (255, 150, 0))
         screen.blit(rule_display2_2, (143, 153))
 
-        text3 = 'Traps: Oil puddles make you lose all of your coins and reset your maximum speed.'
+        text3 = 'Traps: Oil puddles make you lose all of your coins'
         rule_display3 = font.render(text3, True, (255, 200, 0))
         screen.blit(rule_display3, (33, 193))
 
-        text3_1 = 'Hitting borders make you lose one coin.'
-        rule_display3_2 = font.render(text3_1, True, (255, 200, 0))
-        screen.blit(rule_display3_2, (102, 213))
+        text3_1 = 'and reset your maximum speed.'
+        rule_display3_1 = font.render(text3_1, True, (255, 200, 0))
+        screen.blit(rule_display3_1, (122, 213))
+
+        text3_2 = 'Hitting borders make you lose one coin.'
+        rule_display3_2 = font.render(text3_2, True, (255, 200, 0))
+        screen.blit(rule_display3_2, (100, 233))
         pygame.display.update()
 
 
