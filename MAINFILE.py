@@ -418,8 +418,7 @@ def rules():
         rule_display3_2 = font.render(text3_2, True, (255, 200, 0))
         screen.blit(rule_display3_2, (100, 233))
 
-
-        text_4 = 'press m to go back to Main Menu'
+        text_4 = 'Press m to go back to Main Menu'
         rule_display4 = font.render(text_4, True, (255, 0, 0))
         screen.blit(rule_display4, (200, 600))
         pygame.display.update()

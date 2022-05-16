@@ -1,125 +1,105 @@
-from typing import Tuple
-
 import pygame
-import sys
-import os
+import math
+from utility_fxn import scaling_factor
 
-'''
-Variables
-'''
-
-worldx = 960
-worldy = 720
-fps = 40
-ani = 4
-world = pygame.display.set_mode([worldx, worldy])
-
-BLUE = (25, 25, 200)
-BLACK = (23, 23, 23)
-WHITE = (254, 254, 254)
-ALPHA = (0, 255, 0)
-
-'''
-Objects
-'''
+# loads the images that will be used for SPRITES
+MARCO_CAR = pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png')
+GREEN_CAR = scaling_factor(pygame.image.load('Images/green-car.png'), 0.4)
 
 
-class Player(pygame.sprite.Sprite):
-    """
-    Spawn a player
-    """
+# template that features the basic characteristic of ALL car movement and actions found in this game
+class BaseCarPlayer:
+    # initializes sprite
+    def __init__(self, maxSpeed, rotVelocity):
+        # set and load the sprite image
+        self.image = self.IMG
+        # set the rectangle/box that will enclose the image: just the image box here
+        self.rect = self.image.get_rect()
+        # set the starting speed, angle, and acceleration
+        self.speed = 0
+        self.angle = 0
+        self.acceleration = 0.05
+        # xy position of a car
+        self.x, self.y = self.xy
+        # max velocity
+        self.maxSpeed = maxSpeed
+        self.rotVelocity = rotVelocity
+        self.box = None
 
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.movex = 0
-        self.movey = 0
-        self.frame = 0
-        self.images = []
-        for i in range(1, 5):
-            img = pygame.image.load('Images/Untitled-1.png')
-            img.convert_alpha()  # optimise alpha
-            img.set_colorkey(ALPHA)  # set alpha
-            self.images.append(img)
-            self.image = self.images[0]
-            self.rect = self.image.get_rect()
+    def reset(self, maxSpeed, rotVelocity):
+        self.x = 32
+        self.y = 465
+        self.speed = 0
+        self.angle = 0
+        self.acceleration = 0.05
+        self.maxSpeed = maxSpeed
+        self.rotVelocity = rotVelocity
 
-    def control(self, x, y):
-        """
-        control player movement
-        """
-        self.movex += x
-        self.movey += y
+    def playerPicture(self, number):
+        animation = [pygame.image.load('Images/PlayerAnimation/SportsRacingCar_0.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_1.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_2.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_3.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_4.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_5.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_6.png'),
+                     pygame.image.load('Images/PlayerAnimation/SportsRacingCar_7.png')]
+        self.image = animation[number]
 
-    def update(self):
-        self.rect.x = self.rect.x + self.movex
-        self.rect.y = self.rect.y + self.movey
+    def changeMaxPU(self):
+        self.maxSpeed = self.maxSpeed + 0.1
 
-        # moving left
-        if self.movex < 0:
-            self.frame += 1
-            if self.frame > 3*ani:
-                self.frame = 0
-            self.image = pygame.transform.flip(self.images[self.frame // ani], True, False)
+    # coin advantage, more coins will grant a higher maximum speed
+    def changeMax(self, coin_score):
+        self.maxSpeed = self.maxSpeed + coin_score * 0.015
 
-        # moving right
-        if self.movex > 0:
-            self.frame += 1
-            if self.frame > 3*ani:
-                self.frame = 0
-            self.image = self.images[self.frame//ani]
+    # tells the car how to accelerate everytime that the up button is pushed/held
+    def accelerate_for(self):
+        # add acceleration to the previously recorded speed value
+        self.speed += self.acceleration
+        # if speed becomes greater than the allowed max speed, then speed goes back down to the allowed max speed
+        if self.speed > self.maxSpeed:
+            self.speed = self.maxSpeed
+        # accelerates in the direction that the car is facing
+        self.direction()
 
+    def accelerate_back(self):
+        # add acceleration to the previously recorded speed value
+        self.speed -= (self.acceleration / 2)
+        # if speed becomes greater than the allowed max speed, then speed goes back down to the allowed max speed
+        if self.speed > self.maxSpeed:
+            self.speed = self.maxSpeed
+        # accelerates in the direction that the car is facing
+        self.direction()
 
-'''
-Setup
-'''
+    # tells the car how to slow down when the up key is no longer being pressed
+    def de_accelerate(self):
+        # speed is reduced by subtracting acceleration to the last recorded speed
+        self.speed -= (self.acceleration + 0.05)
+        # if speed becomes less than zero, then speed goes back to 0
+        if self.speed < 0:
+            self.speed = 0
+        # de accelerates in the direction that the car is facing
+        self.direction()
 
-backdrop = pygame.image.load('Images/Track.png')
-clock = pygame.time.Clock()
-pygame.init()
-backdropbox = world.get_rect()
-main = True
+    # tells the car how to rotate when pressing left or right
+    def steering(self, left=False, right=False):
+        # if left is true, rotate by the given rotating speed
+        if left:
+            self.angle += self.rotVelocity
+        # if right is true, rotate by the given rotating speed
+        if right:
+            self.angle -= self.rotVelocity
 
-player = Player()  # spawn player
-player.rect.x = 0  # go to x
-player.rect.y = 0  # go to y
-player_list = pygame.sprite.Group()
-player_list.add(player)
-steps = 10
+    def direction(self):
+        # converts the current player angle from degrees to radians
+        radians = math.radians(self.angle)
+        # determines the direction that the image will be in
+        y_change = math.cos(radians) * self.speed
+        x_change = math.sin(radians) * self.speed
+        self.y -= y_change
+        self.x -= x_change
 
-'''
-Main Loop
-'''
-
-while main:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            try:
-                sys.exit()
-            finally:
-                main = False
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == ord('q'):
-                pygame.quit()
-                try:
-                    sys.exit()
-                finally:
-                    main = False
-            if event.key == pygame.K_LEFT or event.key == ord('a'):
-                player.control(-steps, 0)
-            if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                player.control(steps, 0)
-
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == ord('a'):
-                player.control(steps, 0)
-            if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                player.control(-steps, 0)
-
-    world.blit(backdrop, backdropbox)
-    player.update()
-    player_list.draw(world)
-    pygame.display.flip()
-    clock.tick(fps)
+    # draws the player on the screen based on the x,y, direction from previous functions
+    def draw(self, screen):
+        rotCenter(screen, self.image, (self.x, self.y), self.angle)
